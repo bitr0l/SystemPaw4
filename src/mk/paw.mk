@@ -5,7 +5,7 @@
 
 .SILENT:
 
-PROMPT = printf "%s\t\t%s"
+PROMPT = printf "%s\t\t%s\n"
 
 CC = 	\
 	clang
