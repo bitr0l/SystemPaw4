@@ -13,6 +13,7 @@
 
 /* Forward declarations */
 struct _MPG_CABIO_LIST;
+struct _MPG_CABIO;
 
 /*
  * Represents a cock and balls flush callback, this is used to
@@ -20,6 +21,7 @@ struct _MPG_CABIO_LIST;
  * other words,, cum !!
  *
  * @List:   Fixed multi-page CABIO list to flush.
+ * @Cabio:  CABIO being flushed
  * @Data:   The cum (data).
  * @Offset: Cum (data) offset.
  * @Length: Length of cum (data).
@@ -27,6 +29,7 @@ struct _MPG_CABIO_LIST;
  */
 typedef SSIZE(*MpgCabioFlushCb)(
     struct _MPG_CABIO_LIST *List,
+    struct _MPG_CABIO *Cabio,
     VOID *Data,
     USIZE Offset,
     USIZE Length,
@@ -39,11 +42,13 @@ typedef SSIZE(*MpgCabioFlushCb)(
  *
  * @Chunk:  Fixed width buffer chunk
  * @Length: Length of chunk
+ * @Data:   Backend specific data
  * @Next:   Next I/O buffer
  */
 typedef struct _MPG_CABIO {
     UCHAR Chunk[X_MPG_CAB_WIDTH];
     USIZE Length;
+    VOID *Data;
     struct _MPG_CABIO *Next;
 } MPG_CABIO;
 
@@ -82,6 +87,25 @@ ST_STATUS MpgCabioListInit(MPG_CABIO_LIST *List, MpgCabioFlushCb FlushCb);
 ST_STATUS MpgCabioListInsert(MPG_CABIO_LIST *List, MPG_CABIO *Cabio);
 
 /*
+ * Reset an MPG_CABIO structure
+ *
+ * @Cabio:  CABIO to reset
+ */
+ST_STATUS MpgCabioReset(MPG_CABIO *Cabio);
+
+/*
+ * Write data to a CABIO
+ *
+ * @Cabio:  CABIO to write to
+ * @Data:   Data to write
+ * @Length: Length of data to write
+ *
+ * Returns the number of bytes written on success, zero if full
+ * and less than zero on error.
+ */
+SSIZE MpgCabioWrite(MPG_CABIO *Cabio, const CHAR *Data, USIZE Length);
+
+/*
  * Flush a CABIO list
  *
  * @List:  List to flush
@@ -96,7 +120,8 @@ SSIZE MpgCabioListFlush(MPG_CABIO_LIST *List, USHORT Flags);
  * Initialzie a chunk buffer
  *
  * @Cabio:  CAB I/O chunk to initialize
+ * @Data:   Backend specific data
  */
-ST_STATUS MpgCabioInit(MPG_CABIO *Cabio);
+ST_STATUS MpgCabioInit(MPG_CABIO *Cabio, VOID *Data);
 
 #endif  /* !_AUX_CAB_H_ */

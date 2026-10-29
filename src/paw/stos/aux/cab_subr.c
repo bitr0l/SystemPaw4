@@ -4,6 +4,7 @@
  */
 
 #include <aux/cab.h>
+#include <aux/string.h>
 
 /*
  * Flush a CABIO
@@ -20,7 +21,14 @@ FlushCabio(MPG_CABIO_LIST *List, USIZE Offset, MPG_CABIO *Cabio, USHORT Flags)
         return 0;
     }
 
-    return List->FlushCb(List, Cabio->Chunk, Offset, Cabio->Length, Flags);
+    return List->FlushCb(
+        List,
+        Cabio,
+        Cabio->Chunk,
+        Offset,
+        Cabio->Length,
+        Flags
+    );
 }
 
 ST_STATUS
@@ -38,13 +46,14 @@ MpgCabioListInit(MPG_CABIO_LIST *List, MpgCabioFlushCb FlushCb)
 }
 
 ST_STATUS
-MpgCabioInit(MPG_CABIO *Cabio)
+MpgCabioInit(MPG_CABIO *Cabio, VOID *Data)
 {
     if (Cabio == NULL) {
         return STATUS_INVALID_PARAM;
     }
 
     Cabio->Length = 0;
+    Cabio->Data = Data;
     Cabio->Next = NULL;
     return STATUS_SUCCESS;
 }
@@ -98,4 +107,33 @@ MpgCabioListFlush(MPG_CABIO_LIST *List, USHORT Flags)
     }
 
     return NrBytes;
+}
+
+ST_STATUS
+MpgCabioReset(MPG_CABIO *Cabio)
+{
+    if (Cabio == NULL) {
+        return STATUS_INVALID_PARAM;
+    }
+
+    Cabio->Length = 0;
+    return STATUS_SUCCESS;
+}
+
+SSIZE
+MpgCabioWrite(MPG_CABIO *Cabio, const CHAR *Data, USIZE Length)
+{
+    USIZE RealLength = Length;
+
+    if (Cabio == NULL || Data == NULL) {
+        return -1;
+    }
+
+    if ((Length + Cabio->Length) > X_MPG_CAB_WIDTH) {
+        RealLength = (Length + Cabio->Length) - X_MPG_CAB_WIDTH;
+    }
+
+    MemCpy(&Cabio->Chunk[Cabio->Length], Data, RealLength);
+    Cabio->Length += RealLength;
+    return RealLength;
 }
