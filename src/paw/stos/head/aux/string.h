@@ -15,4 +15,12 @@
  */
 USIZE StrLen(const CHAR *String);
 
+/*
+ * Returns true if the two given strings are equal
+ *
+ * @StringA:  First string to compare
+ * @StringB:  Second string to compare
+ */
+BOOLEAN StrEq(const CHAR *StringA, const CHAR *StringB);
+
 #endif  /* !_AUX_STRING_H_ */
