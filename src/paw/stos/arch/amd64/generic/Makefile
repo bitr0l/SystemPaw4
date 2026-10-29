@@ -21,4 +21,5 @@ $(KERNEL_OUT): $(ASMOFILES)
 	$(LD) $(MISC_OFILES) -T host/link.ld -o $@
 
 %.S.o: %.S
+	$(PROMPT) "AS" $<
 	$(CC) -c $(CFLAGS) $< -o $@
