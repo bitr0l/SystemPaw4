@@ -3,6 +3,7 @@ include ../../../mk/paw.mk
 
 CFILES = $(shell ls | grep *.c)
 CFILES += $(shell find ../aux -name "*.c")
+CFILES += $(shell find ../xt -name "*.c")
 DFILES = $(CFILES:.c=.d)
 OFILES = $(CFILES:.c=.o)
 
