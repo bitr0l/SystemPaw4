@@ -6,6 +6,13 @@
 #ifndef _SYS_TYPES_H_
 #define _SYS_TYPES_H_ 1
 
+/* Boolean values */
+#define TRUE    1
+#define FALSE   0
+
+/* Boolean type */
+typedef _Bool BOOLEAN;
+
 /* Unsigned types */
 typedef unsigned char           UCHAR;
 typedef unsigned short          USHORT;
