@@ -28,7 +28,8 @@ SYS_CFLAGS =    		\
 	-nostdinc			\
 	-nostdlib			\
 	-ffreestanding		\
-	-I$(GLOBAL_ROOT)/sdk/head
+	-I$(GLOBAL_ROOT)/sdk/head	\
+	-target $(CC_ARCH_TARGET)
 
 ifeq ($(CONFIG_ARCH),amd64)
 	SYS_CFLAGS += 		\
