@@ -34,6 +34,8 @@ typedef QUAD        SSIZE;
 #else
 #endif  /* !__SIZEOF_SIZE_T__ */
 
+/* Misc types */
 typedef void VOID;
+typedef USIZE UPTR;
 
 #endif  /* !_SYS_TYPES_H_ */
