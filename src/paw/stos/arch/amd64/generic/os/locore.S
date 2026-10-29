@@ -5,11 +5,14 @@
 
     .text
     .globl _start
+    .extern KernelMain
 _start:
     cli
     cld
 
     xor %rbp, %rbp
+    call KernelMain
+
     mfence
 1:  cli
     hlt

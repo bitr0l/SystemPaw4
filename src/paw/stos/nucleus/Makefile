@@ -1,0 +1,19 @@
+.SILENT:
+include ../../../mk/paw.mk
+
+CFILES = $(shell ls | grep *.c)
+DFILES = $(CFILES:.c=.d)
+OFILES = $(CFILES:.c=.o)
+
+CFLAGS =			\
+	$(SYS_CFLAGS)	\
+	-DPRINTF_DISABLE_SUPPORT_PTRDIFF_T \
+	-DPRINTF_DISABLE_SUPPORT_FLOAT	   \
+
+.PHONY: all
+all: $(OFILES)
+
+-include $(DFILES)
+%.o: %.c
+	$(PROMPT) "CC" $<
+	$(CC) -c $(CFLAGS) $< -o $@

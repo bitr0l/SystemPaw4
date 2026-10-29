@@ -6,7 +6,11 @@
 include ../../mk/paw.mk
 
 .PHONY: all
-all: machine
+all: nucleus machine
+
+.PHONY: nucleus
+nucleus:
+	cd nucleus; $(MAKE)
 
 .PHONY: machine
 machine:
