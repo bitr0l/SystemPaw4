@@ -23,4 +23,13 @@ USIZE StrLen(const CHAR *String);
  */
 BOOLEAN StrEq(const CHAR *StringA, const CHAR *StringB);
 
+/*
+ * Copy one buffer to another
+ *
+ * @Dest:   Destination buffer
+ * @Source: Source buffer
+ * @Length: Number of bytes to copy
+ */
+VOID *MemCpy(VOID *Dest, const VOID *Source, USIZE Length);
+
 #endif  /* !_AUX_STRING_H_ */
