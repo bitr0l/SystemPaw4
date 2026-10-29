@@ -1,0 +1,18 @@
+/*
+ * Copyright (c) 2026, Chloe M., et al.
+ * Provided under the BSD-3 clause.
+ */
+
+#ifndef _AUX_STRING_H_
+#define _AUX_STRING_H_ 1
+
+#include <stdef.h>
+
+/*
+ * Compute the length of a string in bytes
+ *
+ * @String:  String to get length of
+ */
+USIZE StrLen(const CHAR *String);
+
+#endif  /* !_AUX_STRING_H_ */
