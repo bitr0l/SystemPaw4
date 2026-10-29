@@ -8,5 +8,6 @@
 
 #include <sys/types.h>
 #include <sys/_null.h>
+#include <sys/cdefs.h>
 
 #endif  /* !_SDK_STDEF_H_ */
