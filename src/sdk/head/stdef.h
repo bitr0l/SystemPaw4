@@ -10,5 +10,6 @@
 #include <sys/_null.h>
 #include <sys/cdefs.h>
 #include <sys/stdarg.h>
+#include <sys/status.h>
 
 #endif  /* !_SDK_STDEF_H_ */
