@@ -21,13 +21,14 @@ else
 	CC_ARCH_TARGET =
 endif
 
-SYS_CFLAGS =    \
-	-Wall		\
-	-pedantic	\
-	-MMD		\
-	-nostdinc	\
-	-nostdlib	\
-	-ffreestanding
+SYS_CFLAGS =    		\
+	-Wall				\
+	-pedantic			\
+	-MMD				\
+	-nostdinc			\
+	-nostdlib			\
+	-ffreestanding		\
+	-I$(GLOBAL_ROOT)/sdk/head
 
 ifeq ($(CONFIG_ARCH),amd64)
 	SYS_CFLAGS += 		\
