@@ -4,8 +4,11 @@
  */
 
 #include <stdef.h>
+#include <pexpert/serial.h>
 
 VOID
 KernelMain(VOID)
 {
+    /* Initialize the platform serial driver */
+    PxSerialInit();
 }
