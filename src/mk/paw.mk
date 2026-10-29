@@ -29,7 +29,8 @@ SYS_CFLAGS =    		\
 	-nostdlib			\
 	-ffreestanding		\
 	-I$(GLOBAL_ROOT)/sdk/head	\
-	-target $(CC_ARCH_TARGET)
+	-target $(CC_ARCH_TARGET)	\
+	-D_BOOT_PROTO='"$(CONFIG_BOOT_PROTO)"'
 
 ifeq ($(CONFIG_ARCH),amd64)
 	SYS_CFLAGS += 		\
