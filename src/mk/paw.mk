@@ -41,5 +41,6 @@ ifeq ($(CONFIG_ARCH),amd64)
 		-mno-avx		\
 		-mno-avx2		\
 		-mno-3dnow		\
-		-mcmodel=kernel
+		-mcmodel=kernel	\
+		-mgeneral-regs-only
 endif
