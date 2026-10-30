@@ -26,4 +26,11 @@ VOID RsmPhysMemInit(VOID);
  */
 UPTR RsmAllocateFrame(VOID);
 
+/*
+ * Reclaim a single frame of memory.
+ *
+ * @BasePtr:  Base address of memory reclaim
+ */
+VOID RsmReclaimFrame(UPTR BasePtr);
+
 #endif  /* !_RSM_PHYSSEG_H_ */

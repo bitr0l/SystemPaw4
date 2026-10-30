@@ -186,6 +186,20 @@ RsmAllocateFrame(VOID)
 }
 
 VOID
+RsmReclaimFrame(UPTR BasePtr)
+{
+    PFD *Pfd;
+
+    if (BasePtr == 0) {
+        return;
+    }
+
+    BasePtr = ALIGN_DOWN(BasePtr, PAGESIZE);
+    Pfd = PMA_TO_VMA(BasePtr);
+    PfdListInsert(&AvlList, Pfd);
+}
+
+VOID
 RsmPhysMemInit(VOID)
 {
     /* Initialize freelists */
