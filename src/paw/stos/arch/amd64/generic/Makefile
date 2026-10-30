@@ -14,7 +14,9 @@ MISC_OFILES = $(shell find ../../../ -name "*.o")
 
 REAL_ROOT = $(GLOBAL_ROOT)/..
 KERNEL_OUT = $(REAL_ROOT)/out/stoskrnl.sys
-CFLAGS = $(SYS_CFLAGS)
+CFLAGS = 							\
+	$(SYS_CFLAGS)					\
+	-I$(GLOBAL_ROOT)/paw/stos/head
 
 .PHONY: all
 all: $(KERNEL_OUT)
