@@ -169,7 +169,7 @@ PhysMemProbe(VOID)
         }
     }
 
-    CTraceDbgWrite(CTracePmm, "detected %d entries\n", Index);
+    CTraceDbgWrite(CTracePmm, "detected %d ball regions\n", Index);
 }
 
 UPTR
