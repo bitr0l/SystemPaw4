@@ -79,7 +79,14 @@ InitLogStore(PIB *Pib)
 PIB *
 PxGetPib(VOID)
 {
-    return (VOID *)MdRdmsr(IA32_GS_BASE);
+    PIB *Pib;
+
+    Pib = (VOID *)MdRdmsr(IA32_GS_BASE);
+    if (Pib == NULL) {
+        NucBugCheck("PxGetPib() called with no assigned processor");
+    }
+
+    return Pib;
 }
 
 VOID
@@ -92,11 +99,11 @@ PxPibP1Init(PIB *Result)
     /* Initialize IDT vectors */
     InitIdtVec();
 
-    /* Initialize the per-core log store */
-    InitLogStore(Result);
-
     /* Write the global processor pointer */
     MdWrmsr(IA32_GS_BASE, (UPTR)Result);
+
+    /* Initialize the per-core log store */
+    InitLogStore(Result);
 
     /* Some information logging */
     CTraceDbgWrite(Result->LogStore, "phase 1 init OK\n");
