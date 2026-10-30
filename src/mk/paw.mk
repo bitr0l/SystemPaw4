@@ -29,6 +29,7 @@ SYS_CFLAGS =    		\
 	-nostdlib			\
 	-ffreestanding		\
 	-I$(GLOBAL_ROOT)/sdk/head	\
+	-I$(GLOBAL_ROOT)/paw/stos/target \
 	-target $(CC_ARCH_TARGET)	\
 	-D_BOOT_PROTO='"$(CONFIG_BAL_BACKEND)"'
 
