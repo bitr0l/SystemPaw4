@@ -6,6 +6,7 @@
 #include <stdef.h>
 #include <ctrace/object.h>
 #include <ctrace/registry.h>
+#include <nucleus/bal.h>
 #include <pexpert/serial.h>
 
 /* Kernel name and version parameters */
@@ -37,4 +38,7 @@ KernelMain(VOID)
 
     /* Print the boot message */
     CTraceDbgWrite(CTraceNuc, "booting %s %s\n", KNAME, KVER);
+
+    /* Initialize the boot abstraction layer */
+    NucBalInit();
 }

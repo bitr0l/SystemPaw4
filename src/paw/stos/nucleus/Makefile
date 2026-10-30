@@ -1,7 +1,7 @@
 .SILENT:
 include ../../../mk/paw.mk
 
-CFILES = $(shell ls | grep *.c)
+CFILES = $(shell find . -name "*.c")
 CFILES += $(shell find ../aux -name "*.c")
 CFILES += $(shell find ../xt -name "*.c")
 CFILES += $(shell find ../ctrace -name "*.c")
