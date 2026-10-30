@@ -15,6 +15,9 @@
 /* Maximum name of CTRACE object name (includes NUL) */
 #define CTRACE_OBJECT_NAMELEN 256
 
+/* Debug buffer length */
+#define CTRACE_DEBUG_BUFLEN 256
+
 /* CTRACE_OBJECT cookie */
 #define CTRACE_COOKIE 0xCA7F00D
 
@@ -55,5 +58,17 @@ ST_STATUS CTraceInitObject(const CHAR *Name, USHORT Flags, CTRACE_OBJECT *Result
  * and less than zero on error.
  */
 SSIZE CTraceWrite(CTRACE_OBJECT *Object, const CHAR *Data, USIZE Length);
+
+/*
+ * A wrapper over CTraceWrite() that accepts variadic arguments
+ *
+ * @Object:  CTRACE object
+ * @Fmt:     Format specifier
+ * @<...>:   Variadic arguments
+ *
+ * Returns the number of bytes written on success, zero if full
+ * and less than zero on error.
+ */
+SSIZE CTraceDbgWrite(CTRACE_OBJECT *Object, const CHAR *Fmt, ...);
 
 #endif  /* !_CTRACE_OBJECT_H_ */

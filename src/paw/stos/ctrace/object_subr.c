@@ -3,9 +3,11 @@
  * Provided under the BSD-3 clause.
  */
 
+#include <sys/stdarg.h>
 #include <ctrace/object.h>
 #include <ctrace/ctracevar.h>
 #include <aux/string.h>
+#include <aux/printf.h>
 
 ST_STATUS
 CTraceInitObject(const CHAR *Name, USHORT Flags, CTRACE_OBJECT *Result)
@@ -74,5 +76,25 @@ CTraceWrite(CTRACE_OBJECT *Object, const CHAR *Data, USIZE Length)
         }
     }
 
+    return Length;
+}
+
+SSIZE
+CTraceDbgWrite(CTRACE_OBJECT *Object, const CHAR *Fmt, ...)
+{
+    if (Object == NULL || Fmt == NULL) {
+        return -1;
+    }
+
+    va_list Ap;
+    CHAR Buf[CTRACE_DEBUG_BUFLEN];
+    USIZE Length;
+
+    va_start(Ap, Fmt);
+    vsnprintf(Buf, sizeof(Buf), Fmt, Ap);
+
+    Length = StrLen(Buf);
+    CTraceWrite(Object, Buf, Length);
+    va_end(Ap);
     return Length;
 }
