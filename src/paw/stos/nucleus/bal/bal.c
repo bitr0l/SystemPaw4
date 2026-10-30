@@ -4,6 +4,7 @@
  */
 
 #include <nucleus/bal.h>
+#include <nucleus/bugcheck.h>
 #include <aux/string.h>
 
 #ifndef _BOOT_PROTO
@@ -38,5 +39,5 @@ NucBalInit(VOID)
         }
     }
 
-    /* TODO: Panic here */
+    NucBugCheck("invalid boot protocol\n");
 }
