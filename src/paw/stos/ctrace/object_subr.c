@@ -82,13 +82,13 @@ CTraceWrite(CTRACE_OBJECT *Object, const CHAR *Data, USIZE Length)
 SSIZE
 CTraceDbgWrite(CTRACE_OBJECT *Object, const CHAR *Fmt, ...)
 {
-    if (Object == NULL || Fmt == NULL) {
-        return -1;
-    }
-
     va_list Ap;
     CHAR Buf[CTRACE_DEBUG_BUFLEN];
     USIZE Length;
+
+    if (Object == NULL || Fmt == NULL) {
+        return -1;
+    }
 
     va_start(Ap, Fmt);
     vsnprintf(Buf, sizeof(Buf), Fmt, Ap);
