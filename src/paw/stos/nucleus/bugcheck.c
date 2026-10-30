@@ -4,7 +4,7 @@
  */
 
 #include <sys/stdarg.h>
-#include <aux/printf.h>
+#include <aux/fmt.h>
 #include <nucleus/bugcheck.h>
 
 static CHAR MessageBuffer[256];
@@ -17,8 +17,8 @@ BugCheckHandler(const CHAR *Fmt, ...)
         return;
     }
 
-    vsnprintf(MessageBuffer, sizeof(MessageBuffer), Fmt, Ap);
-    printf("** BUGCHECK: %s", MessageBuffer);
-    printf("... Something has gone wrong during system operation.\n");
-    printf("... The kernel kitty pilot has halted the machine to prevent damage of data.\n");
+    VPrintFmt(MessageBuffer, sizeof(MessageBuffer), Fmt, Ap);
+    Print("** BUGCHECK: %s", MessageBuffer);
+    Print("... Something has gone wrong during system operation.\n");
+    Print("... The kernel kitty pilot has halted the machine to prevent damage of data.\n");
 }
