@@ -4,6 +4,9 @@
  */
 
 #include <pexpert/pib.h>
+#include <aux/fmt.h>
+#include <ctrace/registry.h>
+#include <nucleus/bugcheck.h>
 #include <machine/msr.h>
 #include <machine/trap.h>
 #include <machine/idt.h>
@@ -31,6 +34,48 @@ InitIdtVec(VOID)
     IdtLoad();
 }
 
+/*
+ * Initialize the per core CTrace log store
+ */
+static VOID
+InitLogStore(PIB *Pib)
+{
+    CHAR NameBuf[128];
+    ST_STATUS Status;
+    USHORT CTraceFlags = 0;
+
+    if (Pib == NULL) {
+        return;
+    }
+
+    /* Allocate a new CTrace object for this processor */
+    Status = CTraceAllocFromRoot(&Pib->LogStore);
+    if (Status != STATUS_SUCCESS) {
+        NucBugCheck(
+            "failed to allocate log store of core %d\n",
+            Pib->LogicalId
+        );
+    }
+
+    /*
+     * Only the bootstrap processor is able to delegate to the root
+     * console. The BSP always has a logical ID of zero.
+     */
+    if (Pib->LogicalId == 0) {
+        CTraceFlags |= CTRACE_GCONS_SYNC;
+    }
+
+    /* Initialize the log store */
+    PrintFmt(NameBuf, sizeof(NameBuf), "pib%d", Pib->LogicalId);
+    Status = CTraceInitObject(NameBuf, CTraceFlags, Pib->LogStore);
+    if (Status != STATUS_SUCCESS) {
+        NucBugCheck(
+            "failed to initialize log store of core %d\n",
+            Pib->LogicalId
+        );
+    }
+}
+
 PIB *
 PxGetPib(VOID)
 {
@@ -47,6 +92,12 @@ PxPibP1Init(PIB *Result)
     /* Initialize IDT vectors */
     InitIdtVec();
 
+    /* Initialize the per-core log store */
+    InitLogStore(Result);
+
     /* Write the global processor pointer */
     MdWrmsr(IA32_GS_BASE, (UPTR)Result);
+
+    /* Some information logging */
+    CTraceDbgWrite(Result->LogStore, "phase 1 init OK\n");
 }

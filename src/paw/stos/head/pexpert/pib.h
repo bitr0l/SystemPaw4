@@ -6,6 +6,7 @@
 #ifndef _PEXPERT_PIB_H_
 #define _PEXPERT_PIB_H_ 1
 
+#include <ctrace/object.h>
 #include <stdef.h>
 
 /*
@@ -13,9 +14,11 @@
  * processor information.
  *
  * @LogicalId:   Logical processor identifier assigned by us
+ * @LogStore:    Local per-core log store
  */
 typedef struct {
     ULONG LogicalId;
+    CTRACE_OBJECT *LogStore;
 } PIB;
 
 /*
