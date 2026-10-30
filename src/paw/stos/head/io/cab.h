@@ -41,13 +41,15 @@ typedef SSIZE(*MpgCabioFlushCb)(
  * I/O structure.
  *
  * @Chunk:  Fixed width buffer chunk
- * @Length: Length of chunk
+ * @Enq:    Enqueue (write) pointer
+ * @Deq:    Dequeue (flush) pointer
  * @Data:   Backend specific data
  * @Next:   Next I/O buffer
  */
 typedef struct _MPG_CABIO {
     UCHAR Chunk[X_MPG_CAB_WIDTH];
-    USIZE Length;
+    USIZE Enq;
+    USIZE Deq;
     VOID *Data;
     struct _MPG_CABIO *Next;
 } MPG_CABIO;

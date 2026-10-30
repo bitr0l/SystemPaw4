@@ -72,7 +72,7 @@ CTraceWrite(CTRACE_OBJECT *Object, const CHAR *Data, USIZE Length)
         }
 
         if (Data[Index] == '\n') {
-            MpgCabioListFlush(&Object->CabioList, Object->Flags, TRUE);
+            MpgCabioListFlush(&Object->CabioList, Object->Flags, FALSE);
         }
     }
 
