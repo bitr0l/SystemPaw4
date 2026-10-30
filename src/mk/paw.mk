@@ -30,7 +30,7 @@ SYS_CFLAGS =    		\
 	-ffreestanding		\
 	-I$(GLOBAL_ROOT)/sdk/head	\
 	-target $(CC_ARCH_TARGET)	\
-	-D_BOOT_PROTO='"$(CONFIG_BOOT_PROTO)"'
+	-D_BOOT_PROTO='"$(CONFIG_BAL_BACKEND)"'
 
 ifeq ($(CONFIG_ARCH),amd64)
 	SYS_CFLAGS += 		\
