@@ -3,11 +3,14 @@
  * Provided under the BSD-3 clause.
  */
 
+#include <sys/queue.h>
 #include <rsm/physseg.h>
+#include <vsm/pgdef.h>
 #include <ctrace/registry.h>
 #include <ctrace/object.h>
 #include <nucleus/bal.h>
 #include <nucleus/bugcheck.h>
+#include <pexpert/page.h>
 
 /* Use to convert type constants to strings */
 #define MEM_TYPE(TYPE)          \
@@ -15,8 +18,29 @@
         ? TypeTab[(TYPE)]       \
         : "invalid"
 
+/*
+ * Represents a page  frame descriptor
+ *
+ * @Link:  TAILQ link
+ */
+typedef struct _PFD {
+    TAILQ_ENTRY(_PFD) Link;
+} PFD;
+
+/*
+ * Represents a page frame descriptor list
+ *
+ * @Head:       Head of the PFD list
+ * @NrEntries:  Total number of entries
+ */
+typedef struct {
+    TAILQ_HEAD(, _PFD) Head;
+    USIZE NrEntries;
+} PFD_LIST;
+
 /* Globals */
 static CTRACE_OBJECT *CTracePmm = NULL;
+static PFD_LIST AvlList;
 
 /*
  * Memory type constant to human readable
@@ -33,6 +57,49 @@ static const char *TypeTab[] = {
     [MEMORY_FRAMEBUFFER]    = "framebuffer",
     [MEMORY_ACPI_TABLES]    = "acpi tables"
 };
+
+/*
+ * Insert a page frame descriptor list into a page frame
+ * descriptor.
+ *
+ * @List:  Page frame descriptor list
+ * @Pfd:   Page frame to push
+ *
+ * TODO: Add locking
+ */
+static VOID
+PfdListInsert(PFD_LIST *List, PFD *Pfd)
+{
+    if (List == NULL || Pfd == NULL) {
+        return;
+    }
+
+    TAILQ_INSERT_TAIL(&List->Head, Pfd, Link);
+    ++List->NrEntries;
+}
+
+/*
+ * Pop a page frame descriptor from a page frame descriptor list
+ *
+ * @List:  Page frame descriptor list to pop from
+ */
+static PFD *
+PfdListPop(PFD_LIST *List)
+{
+    PFD *Pfd;
+
+    if (List == NULL) {
+        return NULL;
+    }
+
+    if ((Pfd = TAILQ_FIRST(&List->Head)) == NULL) {
+        return NULL;
+    }
+
+    TAILQ_REMOVE(&List->Head, Pfd, Link);
+    --List->NrEntries;
+    return Pfd;
+}
 
 /*
  * Initialize component tracing for the physical segment
@@ -64,7 +131,8 @@ PhysMemProbe(VOID)
     MEMMAP_ENTRY Entry;
     ST_STATUS Status;
     UPTR Base, End;
-    USIZE Index;
+    PFD *PfdBase, *Pfd;
+    USIZE Index, Off;
 
     BalGetHandle(&BalHandle);
     if (BalHandle.MemEntryIdx == NULL) {
@@ -88,14 +156,41 @@ PhysMemProbe(VOID)
             End,
             MEM_TYPE(Entry.Type)
         );
+
+        /* Usable entries from this point on */
+        if (Entry.Type != MEMORY_USABLE) {
+            continue;
+        }
+
+        PfdBase = PMA_TO_VMA(Entry.Base);
+        for (Off = 0; Off < Entry.Length; Off += PAGESIZE) {
+            Pfd = PTR_OFFSET(PfdBase, Off);
+            PfdListInsert(&AvlList, Pfd);
+        }
     }
 
     CTraceDbgWrite(CTracePmm, "detected %d entries\n", Index);
 }
 
+UPTR
+RsmAllocateFrame(VOID)
+{
+    PFD *Pfd;
+
+    /* Acquire a page frame descriptor */
+    if ((Pfd = PfdListPop(&AvlList)) == NULL) {
+        return 0;
+    }
+
+    return VMA_TO_PMA(Pfd);
+}
+
 VOID
 RsmPhysMemInit(VOID)
 {
+    /* Initialize freelists */
+    TAILQ_INIT(&AvlList.Head);
+
     /* Initialize CTrace for this component */
     PhysMemInitCTrace();
 
