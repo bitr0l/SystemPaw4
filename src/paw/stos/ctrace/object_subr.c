@@ -64,9 +64,13 @@ CTraceWrite(CTRACE_OBJECT *Object, const CHAR *Data, USIZE Length)
      * flush the CABIO.
      */
     for (Index = 0; Index < Length; ++Index) {
-        MpgCabioWrite(&Object->MBuf, &Data[Index], 1);
+        if ((MpgCabioWrite(&Object->MBuf, &Data[Index], 1)) == 0) {
+            MpgCabioListFlush(&Object->CabioList, Object->Flags, TRUE);
+            continue;
+        }
+
         if (Data[Index] == '\n') {
-            MpgCabioListFlush(&Object->CabioList, Object->Flags);
+            MpgCabioListFlush(&Object->CabioList, Object->Flags, FALSE);
         }
     }
 

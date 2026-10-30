@@ -110,11 +110,12 @@ SSIZE MpgCabioWrite(MPG_CABIO *Cabio, const CHAR *Data, USIZE Length);
  *
  * @List:  List to flush
  * @Flags: Backend specific flags
+ * @Reset: If true, reset each chunk length
  *
- * XXX: This function only clears each chunks length but does
+ * XXX: This function only clears each chunks length (if Reset) but does
  *      not remove them from the list.
  */
-SSIZE MpgCabioListFlush(MPG_CABIO_LIST *List, USHORT Flags);
+SSIZE MpgCabioListFlush(MPG_CABIO_LIST *List, USHORT Flags, BOOLEAN Reset);
 
 /*
  * Initialzie a chunk buffer

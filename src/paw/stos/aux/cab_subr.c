@@ -84,7 +84,7 @@ MpgCabioListInsert(MPG_CABIO_LIST *List, MPG_CABIO *Cabio)
 }
 
 SSIZE
-MpgCabioListFlush(MPG_CABIO_LIST *List, USHORT Flags)
+MpgCabioListFlush(MPG_CABIO_LIST *List, USHORT Flags, BOOLEAN Reset)
 {
     MPG_CABIO *Tail;
     USIZE NrBytes = 0;
@@ -100,8 +100,9 @@ MpgCabioListFlush(MPG_CABIO_LIST *List, USHORT Flags)
 
     while (Tail != NULL) {
         NrBytes += FlushCabio(List, Offset, Tail, Flags);
-        Tail->Length = 0;
-
+        if (Reset) {
+            Tail->Length = 0;
+        }
         Tail = Tail->Next;
         Offset += X_MPG_CAB_WIDTH;
     }
