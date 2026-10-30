@@ -6,6 +6,8 @@
 #ifndef _SYS_CDEFS_H_
 #define _SYS_CDEFS_H_ 1
 
+#include <sys/types.h>
+
 /* Compiler specific definitions */
 #define ASMV              __asm__ __volatile__
 #define ATTR(X)           __attribute__((X))
@@ -17,8 +19,8 @@
 #define BARRIER()         ASMV("" ::: "memory")
 
 /* Pointer offset macros */
-#define PTR_OFFSET(p, off) ((void *)(char *)(p) + (off))
-#define PTR_NOFFSET(p, off) ((void *)(char *)(p) - (off))
+#define PTR_OFFSET(p, off) ((VOID *)((CHAR *)(p) + (off)))
+#define PTR_NOFFSET(p, off) ((VOID *)((CHAR *)(p) - (off)))
 
 /* Bit related macros */
 #define BIT(n) (1ULL << (n))
