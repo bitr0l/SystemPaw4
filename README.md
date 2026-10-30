@@ -8,3 +8,12 @@ design.
 
 SystemPaw4 is written by paw from hardworking critters who want to provide top quality sources, therefore the usage
 of LLMs / AI is prohibited.
+
+## Terminology
+
+- CTRACE   : Cumponent Trace Kit
+- Nucleus  : a kernel region consisting of foundational components
+- Cock and Balls (CAB) : The scatter/gather and flushable ball framework in the I/O manager
+- Cum : Discrete or continuous units of data
+- Balls : Cum buffers
+- Cock : A pipe or ball flush-point
