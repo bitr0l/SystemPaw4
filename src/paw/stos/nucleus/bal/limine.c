@@ -13,6 +13,35 @@ static volatile struct limine_hhdm_request HhdmReq = {
     .revision = 0
 };
 
+/* Memory map request */
+static struct limine_memmap_response *MapResp = NULL;
+static volatile struct limine_memmap_request MapReq = {
+    .id = LIMINE_MEMMAP_REQUEST_ID,
+    .revision = 0
+};
+
+/*
+ * Obtain a memory map entry by index
+ *
+ * @Idx:  Index of memory map entry to obtain
+ * @Result: Result is written here upon success
+ */
+static ST_STATUS
+LimineMemEntryIdx(USIZE Idx, MEMMAP_ENTRY *Result)
+{
+    struct limine_memmap_entry *Entry;
+
+    if (Idx >= MapResp->entry_count) {
+        return STATUS_NOT_FOUND;
+    }
+
+    Entry = MapResp->entries[Idx];
+    Result->Base = Entry->base;
+    Result->Length = Entry->length;
+    Result->Type = Entry->type;
+    return STATUS_SUCCESS;
+}
+
 VOID
 BalLimineInit(BAL_HANDLE *Handle)
 {
@@ -21,5 +50,7 @@ BalLimineInit(BAL_HANDLE *Handle)
     }
 
     HhdmResp = HhdmReq.response;
+    MapResp = MapReq.response;
     Handle->DirectMap = HhdmResp->offset;
+    Handle->MemEntryIdx = LimineMemEntryIdx;
 }

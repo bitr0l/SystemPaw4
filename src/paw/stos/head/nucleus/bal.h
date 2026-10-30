@@ -9,12 +9,42 @@
 #include <stdef.h>
 
 /*
+ * Valid memory types
+ */
+typedef enum {
+    MEMORY_USABLE,
+    MEMORY_RESERVED,
+    MEMORY_ACPI_RECLAIM,
+    MEMORY_ACPI_NVS,
+    MEMORY_BAD,
+    MEMORY_BOOTLOADER,
+    MEMORY_KERNEL,
+    MEMORY_FRAMEBUFFER,
+    MEMORY_ACPI_TABLES
+} MEM_TYPE;
+
+/*
+ * Memory map entry
+ *
+ * @Base:   Entry base
+ * @Length: Entry length
+ * @Type:   Entry type
+ */
+typedef struct {
+    UQUAD Base;
+    UQUAD Length;
+    UQUAD Type;
+} MEMMAP_ENTRY;
+
+/*
  * Represents the boot abstraction layer handle
  *
- * @DirectMap:  Direct map base
+ * @DirectMap:      Direct map base
+ * @MemEntryIdx:    Obtain a memory map entry by index
  */
 typedef struct {
     UPTR DirectMap;
+    ST_STATUS(*MemEntryIdx)(USIZE Idx, MEMMAP_ENTRY *Result);
 } BAL_HANDLE;
 
 /*
