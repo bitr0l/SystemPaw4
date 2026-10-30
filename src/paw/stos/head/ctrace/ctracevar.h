@@ -11,7 +11,7 @@
 #include <stdef.h>
 
 /* Maximum root domain entries */
-#define CTRACE_ROOT_ENTRIES 16
+#define CTRACE_ROOT_ENTRIES 32
 
 /* Enable mask type */
 typedef ULONG CTRACE_EN_MASK;
