@@ -20,5 +20,6 @@ typedef ULONG ST_STATUS;
 #define STATUS_INVALID_PARAM    0x00000002      /* Invalid parameter */
 #define STATUS_IS_FULL          0x00000003      /* Resource is full */
 #define STATUS_NAME_TOO_LONG    0x00000004      /* Name is too long */
+#define STATUS_OUT_OF_RESOURCES 0x00000005      /* Out of resources */
 
 #endif  /* !_SYS_STATUS_H_ */
