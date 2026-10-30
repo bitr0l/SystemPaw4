@@ -3,7 +3,7 @@
  * Provided under the BSD-3 clause.
  */
 
-#include <aux/cab.h>
+#include <io/cab.h>
 #include <aux/string.h>
 
 /*

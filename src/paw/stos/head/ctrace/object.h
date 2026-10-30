@@ -7,7 +7,7 @@
 #define _CTRACE_OBJECT_H_ 1
 
 #include <stdef.h>
-#include <aux/cab.h>
+#include <io/cab.h>
 
 /* Object flags */
 #define CTRACE_GCONS_SYNC  BIT(0)   /* Sync to global console */

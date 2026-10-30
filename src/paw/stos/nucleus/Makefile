@@ -5,6 +5,7 @@ CFILES = $(shell ls | grep *.c)
 CFILES += $(shell find ../aux -name "*.c")
 CFILES += $(shell find ../xt -name "*.c")
 CFILES += $(shell find ../ctrace -name "*.c")
+CFILES += $(shell find ../io -name "*.c")
 DFILES = $(CFILES:.c=.d)
 OFILES = $(CFILES:.c=.o)
 

@@ -6,7 +6,7 @@
 #ifndef _CTRACE_CTRACEVAR_H_
 #define _CTRACE_CTRACEVAR_H_ 1
 
-#include <aux/cab.h>
+#include <io/cab.h>
 #include <stdef.h>
 
 /*
