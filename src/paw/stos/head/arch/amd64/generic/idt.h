@@ -8,6 +8,9 @@
 
 #include <stdef.h>
 
+/* Converts function pointers to UPTR */
+#define ISR(p) ((UPTR)(p))
+
 /* IDT gate kinds */
 #define IDT_INT_GATE    0x8E
 #define IDT_TRAP_GATE   0x8F
