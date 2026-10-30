@@ -8,14 +8,16 @@
 #include <ctrace/registry.h>
 #include <nucleus/bal.h>
 #include <pexpert/serial.h>
+#include <pexpert/pib.h>
 #include <rsm/physseg.h>
 
 /* Kernel name and version parameters */
 #define KNAME "Slut Technology"
 #define KVER  "v0.0.1"
 
-/* CTrace Nucleus Object */
+/* Globals */
 static CTRACE_OBJECT *CTraceNuc = NULL;
+static PIB BspDesc;
 
 /*
  * Initializes the CTRACE buffer for the nucleus
@@ -45,4 +47,7 @@ KernelMain(VOID)
 
     /* Initialize physical memory management */
     RsmPhysMemInit();
+
+    /* Initialize the bootstrap processor (us) */
+    PxPibP1Init(&BspDesc);
 }
