@@ -8,6 +8,7 @@
 #include <ctrace/registry.h>
 #include <nucleus/bal.h>
 #include <pexpert/serial.h>
+#include <rsm/physseg.h>
 
 /* Kernel name and version parameters */
 #define KNAME "Slut Technology"
@@ -41,4 +42,7 @@ KernelMain(VOID)
 
     /* Initialize the boot abstraction layer */
     NucBalInit();
+
+    /* Initialize physical memory management */
+    RsmPhysMemInit();
 }
