@@ -14,4 +14,7 @@
 #define PROT_WRITE  BIT(1)
 #define PROT_EXEC   BIT(2)
 
+/* All protection flags are of this type */
+typedef UCHAR MEM_PROT;
+
 #endif  /* !_SYS_MEMDEFS_H_ */
