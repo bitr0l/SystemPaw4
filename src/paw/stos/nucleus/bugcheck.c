@@ -18,7 +18,7 @@ BugCheckHandler(const CHAR *Fmt, ...)
     }
 
     VPrintFmt(MessageBuffer, sizeof(MessageBuffer), Fmt, Ap);
-    Print("** BUGCHECK: %s", MessageBuffer);
+    Print("\033[31;40m** BUGCHECK: %s", MessageBuffer);
     Print("... Something has gone wrong during system operation.\n");
     Print("... The kernel kitty pilot has halted the machine to prevent damage of data.\n");
 }
