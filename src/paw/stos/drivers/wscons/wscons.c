@@ -49,7 +49,7 @@ WsConsInit(VOID)
         NULL,
         NULL,
         0, 0, 0,
-        1, 2, 70, 0
+        1, 1, 70, 0
     );
 }
 
