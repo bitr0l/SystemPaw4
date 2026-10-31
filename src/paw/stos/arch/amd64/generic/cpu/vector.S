@@ -3,89 +3,119 @@
  * Provided under the BSD-3 clause.
  */
 
+#include <machine/frameasm.h>
+
     .text
-    .extern MdTrapDispatch
+    .extern TrapDispatch
     .align 8
     .globl DivErr
-DivErr:
+INTR_ENTRY(DivErr, 0x00)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl DebugExcept
-DebugExcept:
+INTR_ENTRY(DebugExcept, 0x01)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl Nmi
-Nmi:
+INTR_ENTRY(Nmi, 0x02)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl BreakPoint
-BreakPoint:
+INTR_ENTRY(BreakPoint, 0x03)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl Overflow
-Overflow:
+INTR_ENTRY(Overflow, 0x04)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl BoundRange
-BoundRange:
+INTR_ENTRY(BoundRange, 0x05)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl InvalidOpcode
-InvalidOpcode:
+INTR_ENTRY(InvalidOpcode, 0x06)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl NoCoProc
-NoCoProc:
+INTR_ENTRY(NoCoProc, 0x07)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl DoubleFault
-DoubleFault:
+INTR_ENTRY_EC(DoubleFault, 0x08)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl InvalidTss
-InvalidTss:
+INTR_ENTRY_EC(InvalidTss, 0x0A)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl SegNp
-SegNp:
+INTR_ENTRY_EC(SegNp, 0x0B)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl StackSegFault
-StackSegFault:
+INTR_ENTRY_EC(StackSegFault, 0x0C)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl Gpf
-Gpf:
+INTR_ENTRY_EC(Gpf, 0x0D)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
 
     .globl PageFault
-PageFault:
+INTR_ENTRY_EC(PageFault, 0x0E)
+    mov %rsp, %rdi
+    call TrapDispatch
 1:  cli
     hlt
     jmp 1b
