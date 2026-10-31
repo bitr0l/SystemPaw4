@@ -7,6 +7,7 @@
 #define _PEXPERT_PIB_H_ 1
 
 #include <ctrace/object.h>
+#include <pexpert/mpb.h>
 #include <stdef.h>
 
 /*
@@ -15,10 +16,12 @@
  *
  * @LogicalId:   Logical processor identifier assigned by us
  * @LogStore:    Local per-core log store
+ * @Mcb:         Machine processor block
  */
 typedef struct {
     ULONG LogicalId;
     CTRACE_OBJECT *LogStore;
+    MPB Mpb;
 } PIB;
 
 /*

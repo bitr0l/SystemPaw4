@@ -5,11 +5,19 @@
 
 #include <pexpert/pib.h>
 #include <aux/fmt.h>
+#include <aux/string.h>
 #include <ctrace/registry.h>
 #include <nucleus/bugcheck.h>
 #include <machine/msr.h>
 #include <machine/trap.h>
 #include <machine/idt.h>
+#include <machine/cpuid.h>
+
+/* Vendor strings */
+#define VENDOR_INTEL   "GenuineIntel"
+#define VENDOR_INTEL1  "GenuineIotel"   /* Single bit error quirk */
+#define VENDOR_UMC     "UMC UMC UMC "
+#define VENDOR_AMD     "AuthenticAMD"
 
 /*
  * Initialize IDT vectors here
@@ -76,6 +84,103 @@ InitLogStore(PIB *Pib)
     }
 }
 
+/*
+ * Obtain the processor vendor
+ *
+ * @Pib:  Processor information block
+ */
+static VOID
+GetProcessorVendor(PIB *Pib)
+{
+    ULONG Ebx, Edx, Ecx, Unused;
+    CHAR VendorString[13];
+    MPB *Mpb;
+
+    if (Pib == NULL) {
+        return;
+    }
+
+    Mpb = &Pib->Mpb;
+    CPUID(0x00, Unused, Ebx, Ecx, Edx);
+
+    /* DWORD 0 */
+    VendorString[0] = Ebx & 0xFF;
+    VendorString[1] = (Ebx >> 8) & 0xFF;
+    VendorString[2] = (Ebx >> 16) & 0xFF;
+    VendorString[3] = (Ebx >> 24) & 0xFF;
+
+    /* DWORD 1 */
+    VendorString[4] = Edx & 0xFF;
+    VendorString[5] = (Edx >> 8) & 0xFF;
+    VendorString[6] = (Edx >> 16) & 0xFF;
+    VendorString[7] = (Edx >> 24) & 0xFF;
+
+    /* DWORD 2 */
+    VendorString[8] = Ecx & 0xFF;
+    VendorString[9] = (Ecx >> 8) & 0xFF;
+    VendorString[10] = (Ecx >> 16) & 0xFF;
+    VendorString[11] = (Ecx >> 24) & 0xFF;
+    VendorString[12] = '\0';
+
+    /* Match which vendor */
+    if (StrEq(VendorString, VENDOR_INTEL)) {
+        Mpb->Vendor = CPU_VENDOR_INTEL;
+    } else if (StrEq(VendorString, VENDOR_INTEL1)) {
+        Mpb->Vendor = CPU_VENDOR_INTEL;
+    } else if (StrEq(VendorString, VENDOR_UMC)) {
+        Mpb->Vendor = CPU_VENDOR_UMC;
+    } else if (StrEq(VendorString, VENDOR_AMD)) {
+        Mpb->Vendor = CPU_VENDOR_AMD;
+    } else {
+        Mpb->Vendor = CPU_VENDOR_UNKNOWN;
+    }
+
+    CTraceDbgWrite(Pib->LogStore, "vendor : %s\n", VendorString);
+}
+
+/*
+ * Obtain processor features
+ *
+ * @Pib: Processor information block
+ */
+static VOID
+GetProcessorFeatures(PIB *Pib)
+{
+    ULONG Eax, Unused;
+    MPB *Mpb;
+
+    if (Pib == NULL) {
+        return;
+    }
+
+    Mpb = &Pib->Mpb;
+    CPUID(0x01, Eax, Unused, Unused, Unused);
+
+    /* Model number and family*/
+    Mpb->Model = (Eax >> 4) & 0xF;
+    Mpb->Family = (Eax >> 8) & 0xF;
+    Mpb->ExtModel = (Eax >> 16) & 0xF;
+}
+
+/*
+ * Obtain machine specific processor information
+ *
+ * @Pib: Processor information block
+ */
+static VOID
+GetProcessorInfo(PIB *Pib)
+{
+    if (Pib == NULL) {
+        return;
+    }
+
+    /* Get the vendor ID */
+    GetProcessorVendor(Pib);
+
+    /* Get processor features */
+    GetProcessorFeatures(Pib);
+}
+
 PIB *
 PxGetPib(VOID)
 {
@@ -92,9 +197,13 @@ PxGetPib(VOID)
 VOID
 PxPibP1Init(PIB *Result)
 {
+    MPB *Mpb;
+
     if (Result == NULL) {
         return;
     }
+
+    Mpb = &Result->Mpb;
 
     /* Initialize IDT vectors */
     InitIdtVec();
@@ -105,6 +214,11 @@ PxPibP1Init(PIB *Result)
     /* Initialize the per-core log store */
     InitLogStore(Result);
 
+    /* Get processor information */
+    GetProcessorInfo(Result);
+
     /* Some information logging */
+    CTraceDbgWrite(Result->LogStore, "model : %Xh\n", Mpb->Model);
+    CTraceDbgWrite(Result->LogStore, "family : %Xh\n", Mpb->Family);
     CTraceDbgWrite(Result->LogStore, "phase 1 init OK\n");
 }
