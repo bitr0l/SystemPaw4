@@ -53,7 +53,7 @@ void *MemCpy(void *, const void *, USIZE);
 #ifndef FLANTERM_FB_DISABLE_BUMP_ALLOC
 
 #ifndef FLANTERM_FB_BUMP_ALLOC_POOL_SIZE
-#define FLANTERM_FB_BUMP_ALLOC_POOL_SIZE 873000
+#define FLANTERM_FB_BUMP_ALLOC_POOL_SIZE 873000*16
 
 #define FLANTERM_FB_WIDTH_LIMIT 1920
 #define FLANTERM_FB_HEIGHT_LIMIT 1200
@@ -1114,9 +1114,6 @@ struct flanterm_context *flanterm_fb_init(
             width = width_limit;
             height = height_limit;
         }
-
-        // Force disable canvas
-        canvas = NULL;
 #else
         return NULL;
 #endif
