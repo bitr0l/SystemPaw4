@@ -6,6 +6,8 @@
 #ifndef _MACHINE_TRAP_H_
 #define _MACHINE_TRAP_H_ 1
 
+#include <machine/frame.h>
+
 #define TRAP_DIVERR     0x00        /* Divide error */
 #define TRAP_DBG        0x01        /* Debug exception */
 #define TRAP_NMI        0x02        /* Non-maskable interrupt */
@@ -37,5 +39,12 @@ VOID SegNp(VOID);
 VOID StackSegFault(VOID);
 VOID Gpf(VOID);
 VOID PageFault(VOID);
+
+/*
+ * Trap handler
+ *
+ * @Frame:  Trap frame
+ */
+VOID TrapDispatch(TRAP_FRAME *Frame);
 
 #endif  /* !_MACHINE_TRAP_H_ */
