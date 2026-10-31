@@ -40,7 +40,7 @@ WsConsInit(VOID)
         Framebuffer.GreenMaskShift,
         Framebuffer.BlueMaskSize,
         Framebuffer.BlueMaskShift,
-        NULL,
+        BalHandle.WsConsCanvas,
         NULL,
         NULL,
         &Bg,
@@ -49,7 +49,7 @@ WsConsInit(VOID)
         NULL,
         NULL,
         0, 0, 0,
-        0, 0, 0, 0
+        1, 2, 70, 0
     );
 }
 
