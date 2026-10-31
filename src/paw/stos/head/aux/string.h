@@ -32,4 +32,13 @@ BOOLEAN StrEq(const CHAR *StringA, const CHAR *StringB);
  */
 VOID *MemCpy(VOID *Dest, const VOID *Source, USIZE Length);
 
+/*
+ * Fill a buffer with a set value
+ *
+ * @Buffer:     Buffer to fill
+ * @SetValue:   Value to fill with
+ * @Length:     Number of bytes to fill
+ */
+VOID *MemSet(VOID *Buffer, LONG SetValue, USIZE Length);
+
 #endif  /* !_AUX_STRING_H_ */
