@@ -184,14 +184,7 @@ GetProcessorInfo(PIB *Pib)
 PIB *
 PxGetPib(VOID)
 {
-    PIB *Pib;
-
-    Pib = (VOID *)MdRdmsr(IA32_GS_BASE);
-    if (Pib == NULL) {
-        NucBugCheck("PxGetPib() called with no assigned processor");
-    }
-
-    return Pib;
+    return (VOID *)MdRdmsr(IA32_GS_BASE);
 }
 
 VOID
