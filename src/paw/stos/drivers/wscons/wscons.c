@@ -10,7 +10,7 @@
 
 /* Bootcons attributes */
 #define DEFAULT_BG 0x000000
-#define DEFAULT_FG 0xFFB000
+#define DEFAULT_FG 0x55FFFF
 
 static BAL_FRAMEBUFFER Framebuffer;
 static struct flanterm_context *FtCtx = NULL;
