@@ -13,6 +13,7 @@
 #define PROT_READ   BIT(0)
 #define PROT_WRITE  BIT(1)
 #define PROT_EXEC   BIT(2)
+#define PROT_USER   BIT(3)
 
 /* All protection flags are of this type */
 typedef UCHAR MEM_PROT;
