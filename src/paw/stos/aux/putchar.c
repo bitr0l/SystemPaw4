@@ -5,6 +5,7 @@
 
 #include <stdef.h>
 #include <pexpert/serial.h>
+#include <drivers/wscons/wscons.h>
 
 VOID
 _putchar(CHAR c)
@@ -12,8 +13,10 @@ _putchar(CHAR c)
     /* Translate NL TO CRNL */
     if (c == '\n') {
         PxSerialDebugLn(SERIAL_COM0, "\r\n", 2);
+        WsConsWrite("\r\n", 2);
         return;
     }
 
     PxSerialDebugLn(SERIAL_COM0, &c, 1);
+    WsConsWrite(&c, 1);
 }

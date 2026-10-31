@@ -4,6 +4,7 @@
  */
 
 #include <stdef.h>
+#include <drivers/wscons/wscons.h>
 #include <ctrace/object.h>
 #include <ctrace/registry.h>
 #include <nucleus/bal.h>
@@ -39,11 +40,14 @@ KernelMain(VOID)
     /* Initialize the Nucleus trace buffer */
     InitNucleusTrace();
 
-    /* Print the boot message */
-    CTraceDbgWrite(CTraceNuc, "booting %s %s\n", KNAME, KVER);
-
     /* Initialize the boot abstraction layer */
     NucBalInit();
+
+    /* Initialize the workstation console */
+    WsConsInit();
+
+    /* Print the boot message */
+    CTraceDbgWrite(CTraceNuc, "booting %s %s\n", KNAME, KVER);
 
     /* Initialize physical memory management */
     RsmPhysMemInit();
