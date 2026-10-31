@@ -69,6 +69,6 @@
         jz 1f                         ;\
         lfence                        ;\
         swapgs                        ;\
-    1: FRAME_PUSH(VECTOR)
+    1:  FRAME_PUSH(VECTOR)
 
 #endif  /* !_MACHINE_FRAMEASM_H_ */
