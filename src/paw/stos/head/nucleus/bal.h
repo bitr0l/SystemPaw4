@@ -3,8 +3,8 @@
  * Provided under the BSD-3 clause.
  */
 
-#ifndef _NUCLEUS_BPAL_H_
-#define _NUCLEUS_BPAL_H_ 1
+#ifndef _NUCLEUS_BAL_H_
+#define _NUCLEUS_BAL_H_ 1
 
 #include <stdef.h>
 
@@ -24,6 +24,23 @@ typedef enum {
 } MEM_TYPE;
 
 /*
+ * Represents a framebuffer
+ */
+typedef struct {
+    VOID *Address;
+    UQUAD Width;
+    UQUAD Height;
+    UQUAD Pitch;
+    SHORT Bpp;
+    UCHAR RedMaskSize;
+    UCHAR RedMaskShift;
+    UCHAR GreenMaskSize;
+    UCHAR GreenMaskShift;
+    UCHAR BlueMaskSize;
+    UCHAR BlueMaskShift;
+} BAL_FRAMEBUFFER;
+
+/*
  * Memory map entry
  *
  * @Base:   Entry base
@@ -41,10 +58,12 @@ typedef struct {
  *
  * @DirectMap:      Direct map base
  * @MemEntryIdx:    Obtain a memory map entry by index
+ * @Framebuffer:    Framebuffer information
  */
 typedef struct {
     UPTR DirectMap;
     ST_STATUS(*MemEntryIdx)(USIZE Idx, MEMMAP_ENTRY *Result);
+    BAL_FRAMEBUFFER Framebuffer;
 } BAL_HANDLE;
 
 /*
@@ -74,4 +93,4 @@ BalGetDirectMap(VOID)
     return Handle.DirectMap;
 }
 
-#endif  /* !_NUCLEUS_BPAL_H_ */
+#endif  /* !_NUCLEUS_BAL_H_ */

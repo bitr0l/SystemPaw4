@@ -6,6 +6,8 @@
 #include <nucleus/bal.h>
 #include <aux/limine.h>
 
+#define FRAMEBUFFER FbResp->framebuffers[0]
+
 /* HHDM request */
 static struct limine_hhdm_response *HhdmResp = NULL;
 static volatile struct limine_hhdm_request HhdmReq = {
@@ -17,6 +19,13 @@ static volatile struct limine_hhdm_request HhdmReq = {
 static struct limine_memmap_response *MapResp = NULL;
 static volatile struct limine_memmap_request MapReq = {
     .id = LIMINE_MEMMAP_REQUEST_ID,
+    .revision = 0
+};
+
+/* Framebuffer request */
+static struct limine_framebuffer_response *FbResp = NULL;
+static struct limine_framebuffer_request FbReq = {
+    .id = LIMINE_FRAMEBUFFER_REQUEST_ID,
     .revision = 0
 };
 
@@ -43,6 +52,28 @@ LimineMemEntryIdx(USIZE Idx, MEMMAP_ENTRY *Result)
 }
 
 VOID
+BpalInitFramebuffer(BAL_HANDLE *Handle)
+{
+    BAL_FRAMEBUFFER *Framebuffer;
+
+    if (Handle == NULL) {
+        return;
+    }
+
+    Framebuffer = &Handle->Framebuffer;
+    Framebuffer->Address = FRAMEBUFFER->address;
+    Framebuffer->Width = FRAMEBUFFER->width;
+    Framebuffer->Height = FRAMEBUFFER->height;
+    Framebuffer->Pitch = FRAMEBUFFER->pitch;
+    Framebuffer->RedMaskSize = FRAMEBUFFER->red_mask_size;
+    Framebuffer->RedMaskShift = FRAMEBUFFER->red_mask_shift;
+    Framebuffer->GreenMaskSize = FRAMEBUFFER->green_mask_size;
+    Framebuffer->GreenMaskShift = FRAMEBUFFER->green_mask_shift;
+    Framebuffer->BlueMaskSize = FRAMEBUFFER->blue_mask_size;
+    Framebuffer->BlueMaskShift = FRAMEBUFFER->blue_mask_shift;
+}
+
+VOID
 BalLimineInit(BAL_HANDLE *Handle)
 {
     if (Handle == NULL) {
@@ -51,6 +82,10 @@ BalLimineInit(BAL_HANDLE *Handle)
 
     HhdmResp = HhdmReq.response;
     MapResp = MapReq.response;
+    FbResp = FbReq.response;
+
+    BpalInitFramebuffer(Handle);
     Handle->DirectMap = HhdmResp->offset;
     Handle->MemEntryIdx = LimineMemEntryIdx;
+    BpalInitFramebuffer(Handle);
 }
