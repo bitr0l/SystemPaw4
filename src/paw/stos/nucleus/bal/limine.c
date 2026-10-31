@@ -7,6 +7,7 @@
 #include <aux/limine.h>
 
 #define FRAMEBUFFER FbResp->framebuffers[0]
+#define TERMINAL TermResp->entries[0]
 
 /* HHDM request */
 static struct limine_hhdm_response *HhdmResp = NULL;
@@ -24,8 +25,14 @@ static volatile struct limine_memmap_request MapReq = {
 
 /* Framebuffer request */
 static struct limine_framebuffer_response *FbResp = NULL;
-static struct limine_framebuffer_request FbReq = {
+static volatile struct limine_framebuffer_request FbReq = {
     .id = LIMINE_FRAMEBUFFER_REQUEST_ID,
+    .revision = 0
+};
+
+static struct limine_flanterm_fb_init_params_response *TermResp;
+static volatile struct limine_flanterm_fb_init_params_request TermReq = {
+    .id = LIMINE_FLANTERM_FB_INIT_PARAMS_REQUEST_ID,
     .revision = 0
 };
 
@@ -83,9 +90,11 @@ BalLimineInit(BAL_HANDLE *Handle)
     HhdmResp = HhdmReq.response;
     MapResp = MapReq.response;
     FbResp = FbReq.response;
+    TermResp = TermReq.response;
 
     BpalInitFramebuffer(Handle);
     Handle->DirectMap = HhdmResp->offset;
     Handle->MemEntryIdx = LimineMemEntryIdx;
+    Handle->WsConsCanvas = TERMINAL->canvas;
     BpalInitFramebuffer(Handle);
 }

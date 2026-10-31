@@ -59,11 +59,13 @@ typedef struct {
  * @DirectMap:      Direct map base
  * @MemEntryIdx:    Obtain a memory map entry by index
  * @Framebuffer:    Framebuffer information
+ * @WsConsCanvas:   WsCons canvas (can be NULL)
  */
 typedef struct {
     UPTR DirectMap;
     ST_STATUS(*MemEntryIdx)(USIZE Idx, MEMMAP_ENTRY *Result);
     BAL_FRAMEBUFFER Framebuffer;
+    VOID *WsConsCanvas;
 } BAL_HANDLE;
 
 /*
