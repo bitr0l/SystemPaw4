@@ -8,6 +8,7 @@
 #include <ctrace/object.h>
 #include <ctrace/registry.h>
 #include <nucleus/bal.h>
+#include <nucleus/bugcheck.h>
 #include <pexpert/serial.h>
 #include <pexpert/pib.h>
 #include <rsm/physseg.h>
@@ -54,4 +55,7 @@ KernelMain(VOID)
 
     /* Initialize the bootstrap processor (us) */
     PxPibP1Init(&BspDesc);
+
+    /* We have reached the end */
+    NucBugCheck("end of kernel reached - no init loaded\n");
 }
