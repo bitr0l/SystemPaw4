@@ -209,6 +209,34 @@ PxMmuSetVas(MMU_VAS *Vas)
     );
 }
 
+VOID
+PxMmuForkVas(const MMU_VAS *Source, MMU_VAS *Dest)
+{
+    const UPTR *SourcePtr;
+    UPTR *DestPtr;
+    USIZE Index;
+
+    if (Source == NULL || Dest == NULL) {
+        return;
+    }
+
+    if ((Dest->Cr3 = RsmAllocateFrame()) == 0) {
+        return;
+    }
+
+    SourcePtr = PMA_TO_VMA((Source->Cr3) & PTE_ADDR_MASK);
+    DestPtr = PMA_TO_VMA((Dest->Cr3) & PTE_ADDR_MASK);
+
+    /* Copy it */
+    for (Index = 0; Index < 512; ++Index) {
+        if (Index < 256) {
+            DestPtr[Index] = 0;
+        } else {
+            DestPtr[Index] = SourcePtr[Index];
+        }
+    }
+}
+
 ST_STATUS
 PxMmuMapPage(MMU_VAS *Vas, UPTR VmaBase, UPTR PmaBase,
     MEM_PROT Prot, MMU_PAGESIZE PageSize)

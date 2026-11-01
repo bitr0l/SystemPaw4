@@ -34,6 +34,15 @@ VOID PxMmuGetVas(MMU_VAS *Result);
 VOID PxMmuSetVas(MMU_VAS *Vas);
 
 /*
+ * Fork a virtual address space into another copy with the user
+ * portion zeroed.
+ *
+ * @Source:  Source VAS to fork
+ * @Dest:    Destination VAS structure
+ */
+VOID PxMmuForkVas(const MMU_VAS *Source, MMU_VAS *Dest);
+
+/*
  * Map a single page of memory using a specified granularity
  *
  * @Vas:        Virtual address space to map within
