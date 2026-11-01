@@ -190,6 +190,7 @@ PxGetPib(VOID)
 VOID
 PxPibP1Init(PIB *Result)
 {
+    UCHAR ModelNumber;
     MPB *Mpb;
 
     if (Result == NULL) {
@@ -211,7 +212,8 @@ PxPibP1Init(PIB *Result)
     GetProcessorInfo(Result);
 
     /* Some information logging */
-    CTraceDbgWrite(Result->LogStore, "model : %Xh\n", Mpb->Model);
+    ModelNumber = (Mpb->ExtModel << 4) | Mpb->Model;
+    CTraceDbgWrite(Result->LogStore, "model : %Xh\n", ModelNumber);
     CTraceDbgWrite(Result->LogStore, "family : %Xh\n", Mpb->Family);
     CTraceDbgWrite(Result->LogStore, "phase 1 init OK\n");
 }
