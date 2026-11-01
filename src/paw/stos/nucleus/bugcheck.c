@@ -22,7 +22,7 @@ BugCheckHandler(const CHAR *Fmt, ...)
     VPrintFmt(MessageBuffer, sizeof(MessageBuffer), Fmt, Ap);
     Print("\033[31;40m** BUGCHECK: %s", MessageBuffer);
     Print("... Ah, fuck!~ I have been railed @.@\n");
-    Print("... The kernel kitty pilot has halted the machine to prevent any damage of data.\n");
+    Print("... The kernel kitty pilot has halted the machine to prevent any loss of cum.\n");
 
     /* Attempt to get processor information */
     if ((ThisProcessor = PxGetPib()) == NULL) {
