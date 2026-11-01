@@ -5,6 +5,7 @@
 
 #include <ctrace/registry.h>
 #include <ctrace/ctracevar.h>
+#include <nucleus/bugcheck.h>
 #include <aux/string.h>
 
 static CTRACE_ROOT_DOM RootDom = {0};
@@ -57,7 +58,7 @@ CTraceInitRegistry(VOID)
 
     Status = CTraceInitObject("__null", 0, &RootDom.NullSink);
     if (Status != STATUS_SUCCESS) {
-        /* TODO: Panic here */
+        NucBugCheck("failed to create __null CTrace object\n");
         return;
     }
 }
