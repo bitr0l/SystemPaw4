@@ -12,6 +12,7 @@
 #include <pexpert/serial.h>
 #include <pexpert/pib.h>
 #include <rsm/physseg.h>
+#include <vsm/core.h>
 
 /* Kernel name and version parameters */
 #define KNAME "Slut Technology"
@@ -55,6 +56,10 @@ KernelMain(VOID)
 
     /* Initialize the bootstrap processor (us) */
     PxPibP1Init(&BspDesc);
+
+    /* Initialize VSM */
+    VsmInitMemory();
+    CTraceDbgWrite(CTraceNuc, "vsm initialized\n");
 
     /* We have reached the end */
     NucBugCheck("end of kernel reached - no init loaded\n");
