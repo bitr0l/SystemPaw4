@@ -49,6 +49,7 @@ VsmPageDbInsert(PAGE_DB *PageDb, PAGE_DESCRIPTOR *Desc)
     }
 
     RB_INSERT(PageDb, &PageDb->Head, Desc);
+    ++PageDb->NrEntries;
     return STATUS_SUCCESS;
 }
 
@@ -60,5 +61,6 @@ VsmPageDbInit(PAGE_DB *PageDb)
     }
 
     RB_INIT(&PageDb->Head);
+    PageDb->NrEntries = 0;
     return STATUS_SUCCESS;
 }
