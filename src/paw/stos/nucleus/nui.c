@@ -59,7 +59,6 @@ KernelMain(VOID)
 
     /* Initialize VSM */
     VsmInitMemory();
-    CTraceDbgWrite(CTraceNuc, "vsm initialized\n");
 
     /* We have reached the end */
     NucBugCheck("end of kernel reached - no init loaded\n");

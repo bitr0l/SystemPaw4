@@ -9,6 +9,8 @@
 #include <rsm/physseg.h>
 #include <pexpert/page.h>
 #include <pexpert/mmu.h>
+#include <ctrace/object.h>
+#include <ctrace/registry.h>
 #include <nucleus/bugcheck.h>
 
 /* Number of pages to have ready for allocation */
@@ -17,6 +19,7 @@
 /* Globals */
 static MMU_VAS KVas;
 static TAILQ_HEAD(, _PAGE_INFO) PageInfoList;
+static CTRACE_OBJECT *VsmMessages;
 
 /*
  * Initialize the shadow page database
@@ -26,7 +29,7 @@ InitShadowDb(VOID)
 {
     UPTR InfoFrameBase, FrameBase;
     USIZE InfoPerPage, Index;
-    USIZE InfoIndex;
+    USIZE InfoIndex, InfoCount = 0;
     PAGE_INFO *InfoBall, *Info;
 
     InfoPerPage = PAGESIZE / sizeof(PAGE_INFO);
@@ -50,19 +53,38 @@ InitShadowDb(VOID)
             Info->BasePtr = FrameBase;
             Info->EndPtr = FrameBase + PAGESIZE;
             TAILQ_INSERT_TAIL(&PageInfoList, Info, Link);
+            ++InfoCount;
         }
     }
+
+    CTraceDbgWrite(
+        VsmMessages,
+        "added %d entries to shadow db\n",
+        InfoCount
+    );
 }
 
 VOID
 VsmInitMemory(VOID)
 {
     MMU_VAS CurVas;
+    ST_STATUS Status;
+
+    Status = CTraceAllocFromRoot(&VsmMessages);
+    if (Status != STATUS_SUCCESS) {
+        NucBugCheck("failed to allocate vsm ctrace object\n");
+    }
+
+    Status = CTraceInitObject("vsm.init", CTRACE_GCONS_SYNC, VsmMessages);
+    if (Status != STATUS_SUCCESS) {
+        NucBugCheck("failed to initialize vsm ctrace object\n");
+    }
 
     /* Create a forked address space */
     PxMmuGetVas(&CurVas);
     PxMmuForkVas(&CurVas, &KVas);
     PxMmuSetVas(&KVas);
+    CTraceDbgWrite(VsmMessages, "kvas switch OK\n");
 
     /* Initialize page databases */
     TAILQ_INIT(&PageInfoList);
