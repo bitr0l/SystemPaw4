@@ -6,6 +6,7 @@
 #ifndef _VSM_PAGEDB_H_
 #define _VSM_PAGEDB_H_ 1
 
+#include <sys/queue.h>
 #include <sys/tree.h>
 #include <sys/status.h>
 #include <stdef.h>
@@ -17,9 +18,10 @@
  * @BasePtr:  Base of page
  * @EndPtr:   End of page
  */
-typedef struct {
+typedef struct _PAGE_INFO {
     UPTR BasePtr;
     UPTR EndPtr;
+    TAILQ_ENTRY(_PAGE_INFO) Link;
 } PAGE_INFO;
 
 /*
