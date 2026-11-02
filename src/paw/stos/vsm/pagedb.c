@@ -33,9 +33,9 @@ PageDescCmp(PAGE_DESCRIPTOR *D0, PAGE_DESCRIPTOR *D1)
     if ((Info1 = D1->Info) == NULL)
         return -1;
 
-    return (Info0->BasePtr < Info1->BasePtr)
+    return (Info0->VBasePtr < Info1->VBasePtr)
         ? -1
-        : (Info0->BasePtr > Info1->BasePtr);
+        : (Info0->VBasePtr > Info1->VBasePtr);
 }
 
 /*

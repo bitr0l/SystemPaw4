@@ -15,12 +15,16 @@
  * Represents page metadata that is referenced by a page
  * descriptor.
  *
- * @BasePtr:  Base of page
- * @EndPtr:   End of page
+ * @BasePtr:   Base of page
+ * @VBasePtr:  Virtual base pointer
+ * @PBasePtr:  Physical base pointer
+ * @Size:      Size in bytes
+ * @Link:      TAILQ link
  */
 typedef struct _PAGE_INFO {
-    UPTR BasePtr;
-    UPTR EndPtr;
+    UPTR VBasePtr;
+    UPTR PBasePtr;
+    ULONG Size;
     TAILQ_ENTRY(_PAGE_INFO) Link;
 } PAGE_INFO;
 
