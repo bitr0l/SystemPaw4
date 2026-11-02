@@ -19,6 +19,7 @@
 /* Globals */
 static MMU_VAS KVas;
 static TAILQ_HEAD(, _PAGE_INFO) PageInfoList;
+static PAGE_DB PageDb;
 static CTRACE_OBJECT *VsmMessages;
 
 /*
@@ -64,6 +65,29 @@ InitShadowDb(VOID)
     );
 }
 
+/*
+ * Initialize the page database
+ */
+static VOID
+InitPageDb(VOID)
+{
+    PAGE_INFO *PageInfo;
+    PAGE_DESCRIPTOR *PageDesc;
+    ST_STATUS Status;
+
+    TAILQ_FOREACH(PageInfo, &PageInfoList, Link) {
+        PageDesc = PMA_TO_VMA(PageInfo->BasePtr);
+        PageDesc->Info = PageInfo;
+
+        Status = VsmPageDbInsert(&PageDb, PageDesc);
+        if (Status != STATUS_SUCCESS) {
+            NucBugCheck("failed to initialize pagedb; insert failure\n");
+        }
+    }
+
+    CTraceDbgWrite(VsmMessages, "pagedb init OK\n");
+}
+
 VOID
 VsmInitMemory(VOID)
 {
@@ -88,7 +112,7 @@ VsmInitMemory(VOID)
 
     /* Initialize page databases */
     TAILQ_INIT(&PageInfoList);
+    VsmPageDbInit(&PageDb);
     InitShadowDb();
-
-    /* TODO: Populate pagedb from page info structures */
+    InitPageDb();
 }
