@@ -6,7 +6,6 @@
 #ifndef _VSM_PGDEF_H_
 #define _VSM_PGDEF_H_ 1
 
-#include <sys/tree.h>
 #include <stdef.h>
 #include <nucleus/bal.h>
 
@@ -26,29 +25,5 @@
     (VOID *)PTR_OFFSET((PMA), BalGetDirectMap())
 #define VMA_TO_PMA(VMA) \
     (UPTR)PTR_NOFFSET((VMA), BalGetDirectMap())
-
-/*
- * Represents page metadata that is referenced by a page
- * descriptor.
- *
- * @BasePtr:  Base of page
- * @EndPtr:   End of page
- */
-typedef struct {
-    UPTR BasePtr;
-    UPTR EndPtr;
-} PAGE_INFO;
-
-/*
- * A page descriptor represents a single page of memory
- * and is an entry within the page descriptor tree.
- *
- * @Link:   Tree link
- * @Info:   Page metadata
- */
-typedef struct _PAGE_DESCRIPTOR {
-    RB_ENTRY(_PAGE_DESCRIPTOR) Link;
-    PAGE_INFO *Info;
-} PAGE_DESCRIPTOR;
 
 #endif  /* !_VSM_PGDEF_H_ */
