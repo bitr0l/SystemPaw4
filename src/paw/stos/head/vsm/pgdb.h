@@ -62,6 +62,15 @@ typedef struct {
 ST_STATUS VsmPageDbInsert(PAGE_DB *PageDb, PAGE_DESCRIPTOR *Desc);
 
 /*
+ * Allocate from a page database
+ *
+ * @PageDb:         Page database to insert into
+ * @PageCount:      Number of pages to allocate
+ * @Result:         Result is written here
+ */
+ST_STATUS VsmPageDbAllocate(PAGE_DB *PageDb, USIZE PageCount, PAGE_DESCRIPTOR **Result);
+
+/*
  * Initialize a page database
  *
  * @PageDb:  Page database
