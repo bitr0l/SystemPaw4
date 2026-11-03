@@ -106,6 +106,16 @@ InitPageDb(VOID)
     CTraceDbgWrite(VsmMessages, "pagedb init OK\n");
 }
 
+ST_STATUS
+VsmAllocatePages(USIZE PageCount, PAGE_DESCRIPTOR **Result)
+{
+    if (PageCount == 0 || Result == NULL) {
+        return STATUS_INVALID_PARAM;
+    }
+
+    return VsmPageDbAllocate(&PageDb, PageCount, Result);
+}
+
 VOID
 VsmInitMemory(VOID)
 {
