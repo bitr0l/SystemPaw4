@@ -8,8 +8,11 @@
 
 #include <machine/prim.h>
 
-#define PxCpuSuspend   MdCpuSuspend
-#define PxCpuSpinWait  MdCpuSpinWait
-#define PxCpuAswap     MdCpuAswap
+#define PxCpuSuspend        MdCpuSuspend
+#define PxCpuSpinWait       MdCpuSpinWait
+#define PxCpuAswap          MdCpuAswap
+#define PxCpuIntMask        MdCpuIntMask
+#define PxCpuIntUnmask      MdCpuIntUnmask
+#define PxCpuIntEn          MdCpuIntEn
 
 #endif /* !_PEXPERT_PRIM_H_ */

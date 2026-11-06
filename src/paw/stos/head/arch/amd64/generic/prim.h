@@ -8,8 +8,10 @@
 
 #include <stdef.h>
 
-#define MdCpuSuspend()  ASMV("hlt")
-#define MdCpuSpinWait() ASMV("pause")
+#define MdCpuSuspend()      ASMV("hlt")
+#define MdCpuSpinWait()     ASMV("pause")
+#define MdCpuIntMask()      ASMV("cli")
+#define MdCpuIntUnmask()    ASMV("sti")
 
 /*
  * Atomic swap operation
@@ -35,6 +37,26 @@ MdCpuAswap(UQUAD *Ptr, UQUAD Value)
     );
 
     return RetVal;
+}
+
+/*
+ * Returns true if interrupts are enabled on the current
+ * processing element.
+ */
+ALWAYS_INLINE static inline BOOLEAN
+MdCpuIntEn(VOID)
+{
+    UQUAD RFlags;
+
+    ASMV(
+        "pushfq\n"
+        "popq %0"
+        : "=r" (RFlags)
+        :
+        : "memory"
+    );
+
+    return ISSET(RFlags, BIT(9)) != 0;
 }
 
 #endif  /* !_MACHINE_PRIM_H_ */
