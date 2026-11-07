@@ -65,9 +65,6 @@ PageDescCmp(PAGE_DESCRIPTOR *D0, PAGE_DESCRIPTOR *D1)
         : (Info0->VBasePtr > Info1->VBasePtr);
 }
 
-/*
- * TODO: Add locking
- */
 ST_STATUS
 VsmPageDbInsert(PAGE_DB *PageDb, PAGE_DESCRIPTOR *Desc)
 {
@@ -82,9 +79,6 @@ VsmPageDbInsert(PAGE_DB *PageDb, PAGE_DESCRIPTOR *Desc)
     return STATUS_SUCCESS;
 }
 
-/*
- * TODO: Add locking
- */
 ST_STATUS
 VsmPageDbAllocate(PAGE_DB *PageDb, USIZE PageCount, PAGE_DESCRIPTOR **Result)
 {

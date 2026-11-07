@@ -67,8 +67,6 @@ static const char *TypeTab[] = {
  *
  * @List:  Page frame descriptor list
  * @Pfd:   Page frame to push
- *
- * TODO: Add locking
  */
 static VOID
 PfdListInsert(PFD_LIST *List, PFD *Pfd)
