@@ -10,6 +10,7 @@
 #include <ctrace/object.h>
 #include <nucleus/bal.h>
 #include <nucleus/bugcheck.h>
+#include <nucleus/cpulock.h>
 #include <pexpert/page.h>
 
 /* Use to convert type constants to strings */
@@ -32,10 +33,12 @@ typedef struct _PFD {
  *
  * @Head:       Head of the PFD list
  * @NrEntries:  Total number of entries
+ * @Lock:       Lock protecting this list
  */
 typedef struct {
     TAILQ_HEAD(, _PFD) Head;
     USIZE NrEntries;
+    CPU_LOCK Lock;
 } PFD_LIST;
 
 /* Globals */
@@ -74,8 +77,10 @@ PfdListInsert(PFD_LIST *List, PFD *Pfd)
         return;
     }
 
+    NucCpuLockAcq(&List->Lock, TRUE);
     TAILQ_INSERT_TAIL(&List->Head, Pfd, Link);
     ++List->NrEntries;
+    NucCpuLockRel(&List->Lock);
 }
 
 /*
@@ -92,12 +97,15 @@ PfdListPop(PFD_LIST *List)
         return NULL;
     }
 
+    NucCpuLockAcq(&List->Lock, TRUE);
     if ((Pfd = TAILQ_FIRST(&List->Head)) == NULL) {
+        NucCpuLockRel(&List->Lock);
         return NULL;
     }
 
     TAILQ_REMOVE(&List->Head, Pfd, Link);
     --List->NrEntries;
+    NucCpuLockRel(&List->Lock);
     return Pfd;
 }
 
@@ -204,6 +212,7 @@ RsmPhysMemInit(VOID)
 {
     /* Initialize freelists */
     TAILQ_INIT(&AvlList.Head);
+    CPU_LOCK_INIT(&AvlList.Lock);
 
     /* Initialize CTrace for this component */
     PhysMemInitCTrace();
