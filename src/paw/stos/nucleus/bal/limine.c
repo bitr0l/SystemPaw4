@@ -30,6 +30,13 @@ static volatile struct limine_framebuffer_request FbReq = {
     .revision = 0
 };
 
+/* ACPI RSDP request */
+static struct limine_rsdp_response *RsdpResp = NULL;
+static volatile struct limine_rsdp_request RsdpReq = {
+    .id = LIMINE_RSDP_REQUEST_ID,
+    .revision = 0
+};
+
 static struct limine_flanterm_fb_init_params_response *TermResp;
 static volatile struct limine_flanterm_fb_init_params_request TermReq = {
     .id = LIMINE_FLANTERM_FB_INIT_PARAMS_REQUEST_ID,
@@ -91,10 +98,12 @@ BalLimineInit(BAL_HANDLE *Handle)
     MapResp = MapReq.response;
     FbResp = FbReq.response;
     TermResp = TermReq.response;
+    RsdpResp = RsdpReq.response;
 
     BpalInitFramebuffer(Handle);
     Handle->DirectMap = HhdmResp->offset;
     Handle->MemEntryIdx = LimineMemEntryIdx;
     Handle->WsConsCanvas = TERMINAL->canvas;
+    Handle->Rsdp = RsdpResp->address;
     BpalInitFramebuffer(Handle);
 }
