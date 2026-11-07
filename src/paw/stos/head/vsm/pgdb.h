@@ -9,6 +9,7 @@
 #include <sys/queue.h>
 #include <sys/tree.h>
 #include <sys/status.h>
+#include <nucleus/cpulock.h>
 #include <stdef.h>
 
 /*
@@ -45,10 +46,12 @@ typedef struct _PAGE_DESCRIPTOR {
  *
  * @Head:       Page tree head
  * @NrEntries:  Number of entries in pagedb
+ * @Lock:       Lock protecting this structure
  */
 typedef struct {
     RB_HEAD(PageDb, _PAGE_DESCRIPTOR) Head;
     USIZE NrEntries;
+    CPU_LOCK Lock;
 } PAGE_DB;
 
 /*

@@ -75,8 +75,10 @@ VsmPageDbInsert(PAGE_DB *PageDb, PAGE_DESCRIPTOR *Desc)
         return STATUS_INVALID_PARAM;
     }
 
+    NucCpuLockAcq(&PageDb->Lock, TRUE);
     RB_INSERT(PageDb, &PageDb->Head, Desc);
     ++PageDb->NrEntries;
+    NucCpuLockRel(&PageDb->Lock);
     return STATUS_SUCCESS;
 }
 
@@ -99,10 +101,13 @@ VsmPageDbAllocate(PAGE_DB *PageDb, USIZE PageCount, PAGE_DESCRIPTOR **Result)
     }
 
     Desc = RB_MIN(PageDb, &PageDb->Head);
+    NucCpuLockAcq(&PageDb->Lock, TRUE);
+
     while (Desc != NULL) {
         Info = Desc->Info;
         if (FoundDescriptors >= PageCount) {
             RemoveContiguous(PageDb, Base, PageCount);
+            NucCpuLockRel(&PageDb->Lock);
             *Result = Base;
             return STATUS_SUCCESS;
         }
@@ -122,6 +127,7 @@ VsmPageDbAllocate(PAGE_DB *PageDb, USIZE PageCount, PAGE_DESCRIPTOR **Result)
         Desc = RB_NEXT(PageDb, &PageDb->Head, Desc);
     }
 
+    NucCpuLockRel(&PageDb->Lock);
     return STATUS_OUT_OF_RESOURCES;
 }
 
@@ -133,6 +139,7 @@ VsmPageDbInit(PAGE_DB *PageDb)
     }
 
     RB_INIT(&PageDb->Head);
+    CPU_LOCK_INIT(&PageDb->Lock);
     PageDb->NrEntries = 0;
     return STATUS_SUCCESS;
 }
